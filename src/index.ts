@@ -23,9 +23,25 @@ async function getUsers () {
 }
 
 async function main() {
-  // ... you will write your Prisma Client queries here
-  await createUser()
-  return getUsers()
+  await prisma.user.create({
+    data: {
+      name: "Alice",
+      email: "alice@prisma.io",
+      Post: {
+        create: { title: "Hello World" },
+      },
+      Profile: {
+        create: { bio:  "I like turtles" }
+      }
+    }
+  })
+  const allUsers = await prisma.user.findMany({
+    include: { 
+      Post: true,
+      Profile: true 
+    },
+  })
+  console.dir(allUsers, { depth: null })
 }
 main()
   .catch(e => {
